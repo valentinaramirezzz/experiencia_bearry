@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Filtro facial · BearRY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/appF.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.181.1/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.1/examples/jsm/"
+        }
+    }
+    </script>
+</head>
+<body>
+    <header class="topbar">
+        <a href="index.html">← Inicio</a>
+        <img src="assets/Images/berro.png" alt="BearRY">
+        <button id="sound" type="button" aria-pressed="false">Activar sonido</button>
+    </header>
+    <main>
+        <h1>Filtro facial</h1>
+        <section class="experience" aria-label="Experiencia de cámara">
+            <div id="app" class="stage">
+                <video id="video-renderer" muted playsinline aria-hidden="true"></video>
+                <canvas id="canvas-renderer" aria-hidden="true" hidden></canvas>
+                <div id="effects" aria-hidden="true"></div>
+                <div class="camera-ui">
+                    <p id="status" role="status">Activa la cámara para probar el filtro.</p>
+                    <button id="camera" type="button" disabled>Activar cámara</button>
+                </div>
+            </div>
+            <aside class="guide">
+                <h2 id="prompt" aria-live="polite">¡Sonríe!</h2>
+                <p id="hint">Aparecerá rubor en tus mejillas.</p>
+                <button id="test-sound" type="button" disabled>Probar audio</button>
+                <p id="audio-status" role="status" hidden></p>
+            </aside>
+        </section>
+        <div class="modes" role="group" aria-label="Elegir filtro">
+            <button type="button" data-mode="smile" aria-pressed="true">Sonrisa</button>
+            <button type="button" data-mode="frown" aria-pressed="false">Enfado</button>
+            <button type="button" data-mode="kiss" aria-pressed="false">Beso</button>
+        </div>
+    </main>
+    <script type="module">
+        const scene = new URLSearchParams(location.search).get('json');
+        if (scene) {
+            document.body.classList.add('legacy');
+            document.querySelector('#canvas-renderer').hidden = false;
+            const { startFaceFilter } = await import('./js/mediapipe/mediapipe_controller.js');
+            startFaceFilter(scene);
+        } else {
+            await import('./js/bearry-face.js');
+        }
+    </script>
+</body>
+</html>
